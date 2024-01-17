@@ -69,7 +69,7 @@ with st.sidebar:
     st.sidebar.markdown("### Prompt Guide")
     st.sidebar.markdown("- 🗒️ Start with \"Explore:\" to get suggested prompt from chatgpt")
     st.sidebar.markdown("- 📉 Start with \"Show:\" to have chatgpt generate a plot based on your entered prompt")
-    st.sidebar.markdown("- 📖 Start with \"Describe:\" to have chatgpt describe the plot it just generated for you")
+    st.sidebar.markdown("- 📖 Say \"Describe it\" to have chatgpt describe the plot it just generated for you")
 
 
 st.title("💬 VIS Chatbot")
