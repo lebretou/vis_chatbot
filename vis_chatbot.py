@@ -25,7 +25,8 @@ def execute_and_capture_plot(code):
     plt.close()
     buf.seek(0)
 
-    return buf
+
+    return buf, reasoning
 
 # List to hold datasets
 if "datasets" not in st.session_state:
@@ -141,7 +142,7 @@ if prompt := st.chat_input():
     # Execute the code 
     if "plt.show()" in answer:
         # Execute the code and get the plot image
-        plot_image = execute_and_capture_plot(answer)
+        plot_image, reasoning = execute_and_capture_plot(answer)
 
         # # display text
         msg = 'A visualization has been created based on your prompt'
@@ -150,6 +151,10 @@ if prompt := st.chat_input():
 
         # Display the plot in the image container
         st.chat_message("assistant").image(plot_image, caption="Generated Plot", use_column_width=True)
+
+        # Display the reasoning
+        st.session_state.messages.append({"role": "assistant", "content": reasoning})
+        st.chat_message("assistant").write(reasoning)
 
         # Store the current code in the session state
         st.session_state["vis_code"] = answer
