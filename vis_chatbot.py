@@ -13,18 +13,18 @@ def execute_and_capture_plot(code):
     :return: BytesIO object containing the plot image.
     """
     # Execute the code
-    exec(code, globals())
-
+    try: 
+        exec(code, globals())
+    except Exception as e:
+        st.info("Chatgpt failed to generate a plot. Please try again.")
+        st.stop()
+    
     # Save the plot to a BytesIO object
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
     plt.close()
     buf.seek(0)
 
-    # Retrieve the plot type of the visualization generated
-    plot_type = identify_plot_type(ax)
-    print(plot_type)
-    
     return buf
 
 # List to hold datasets
@@ -63,6 +63,12 @@ with st.sidebar:
         print("File failed to load.\n" + str(e))
     # Radio buttons for dataset choice
     chosen_dataset = dataset_container.radio(":bar_chart: Choose your data:",datasets.keys(),index=index_no)
+
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("### Prompt Guide")
+    st.sidebar.markdown("- 🗒️ Start with \"Explore:\" to get suggested prompt from chatgpt")
+    st.sidebar.markdown("- 📉 Start with \"Show:\" to have chatgpt generate a plot based on your entered prompt")
+    st.sidebar.markdown("- 📖 Start with \"Describe:\" to have chatgpt describe the plot it just generated for you")
 
 
 st.title("💬 VIS Chatbot")
@@ -111,7 +117,7 @@ if prompt := st.chat_input():
             st.info("You haven't created any visualization yet!")
             st.stop()
     
-    else: 
+    elif prompt.startswith("show") or prompt.startswith("Show"):
         # Generate the prompt template depending on the selected dataset
         primer1, primer2 = get_primer(datasets[chosen_dataset],'datasets["'+ chosen_dataset + '"]') 
         
@@ -122,6 +128,13 @@ if prompt := st.chat_input():
         answer = run_request(question_to_ask, openai_api_key)
         answer = primer2 + answer
         answer = format_response(answer)
+    
+    elif "explore" in prompt or "Explore" in prompt:
+        answer = ask_gpt(describe_dataset(datasets[chosen_dataset]), prompt, openai_api_key)
+
+    # simply send the prompt to chatgpt api
+    else:
+        answer = ask_gpt("", prompt, openai_api_key)
 
     # print(answer)
 

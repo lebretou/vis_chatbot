@@ -20,6 +20,19 @@ def identify_plot_type(ax):
     return "Unknown Plot Type"
 
 
+# function that simply sends user's prompt to the chatgpt api and returns the response
+def ask_gpt(task, prompt, key):
+    openai.api_key = key
+    model = "gpt-4"
+
+    response = openai.ChatCompletion.create(model=model,
+        messages=[{"role":"system","content":task},{"role":"user","content":prompt}])
+
+    llm_response = response["choices"][0]["message"]["content"]
+
+    return llm_response
+
+
 def simulate_chatgpt_response(user_message):
     """
     Simulates a response from the ChatGPT API. This is a basic simulation and does not
@@ -107,6 +120,30 @@ def describe_plot(plot_code, key):
     llm_response = response["choices"][0]["message"]["content"]
 
     return llm_response
+
+def describe_dataset(df_dataset):
+    """
+    This function takes a dataframe and returns a description of the dataset
+    """
+    desc = """
+    I built a natural language to data visualization chatbot using openai api. Now to help users explore the dataset and suggest 
+    useful prompts, below is a description of the dataset including the column names and their data types. I also appended
+    a head of the dataset. Based on the description above and user input, could you suggest 5 prompts? Answer in the fashion of 1. 2. 3. 4. 5. Do not include other text in your answer just 
+    the suggested prompts. 
+    """
+
+    for i in df_dataset.columns:
+        if len(df_dataset[i].drop_duplicates()) < 20 and df_dataset.dtypes[i]=="O":
+            desc = desc + "\nThe column '" + i + "' has categorical values '" + \
+                "','".join(str(x) for x in df_dataset[i].drop_duplicates()) + "'. "
+        elif df_dataset.dtypes[i]=="int64" or df_dataset.dtypes[i]=="float64":
+            desc = desc + "\nThe column '" + i + "' is type " + str(df_dataset.dtypes[i]) + " and contains numeric values. "
+    
+    desc += "\n\nHead of the dataset:\n" + df_dataset.head().to_string()
+    desc += "\n\nUser input:"
+    
+    return desc
+
 
 def format_response(res):
     """
