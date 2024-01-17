@@ -140,7 +140,7 @@ if prompt := st.chat_input():
     # print(answer)
 
     # Execute the code 
-    if "plt.show()" in answer:
+    if "plt.show()" in answer or "plt" in answer:
         # Execute the code and get the plot image
         plot_image, reasoning = execute_and_capture_plot(answer)
 
