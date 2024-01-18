@@ -2,6 +2,13 @@
 
 VIS Chatbot is a visualization tool, utilizing OpenAI's ChatGPT to transform natural language prompts into data visualizations. This chatbot is built upon Paula Maddigan and Teo Susnjak's work Chat2VIS (https://ieeexplore.ieee.org/document/10121440). Reflecting upon their work, this app aims to provide conversational interface, code explanations and reasoning behind the choice of a specific plot type. 
 
+## Demo Video
+
+
+https://github.com/lebretou/vis_chatbot/assets/42985861/bb04e264-7f23-491a-a964-312278683f1e
+
+
+
 ## Main Features
 - **Interactive Chat Interface**: Engage in a conversational experience, allowing users to input prompts in natural language, akin to communicating with ChatGPT.
 - **Exploration Mode**: Dive into datasets with ease. Start with "Explore:" to get suggested prompts from ChatGPT, tailored to the dataset at hand.
